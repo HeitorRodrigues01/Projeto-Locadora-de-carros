@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h1>Listagem de Veículos</h1>
+    
+    <form method="GET" class="mb-3">
+        <input type="text" name="marca" placeholder="Filtrar por Marca" value="{{ marca_filter }}">
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </form>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Placa</th>
+                <th>Cor</th>
+                <th>Preço de Locação</th>
+                <th>Disponibilidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for veiculo in page_obj %}
+            <tr>
+                <td>{{ veiculo.marca }}</td>
+                <td>{{ veiculo.modelo }}</td>
+                <td>{{ veiculo.placa }}</td>
+                <td>{{ veiculo.cor }}</td>
+                <td>{{ veiculo.preco_locacao }}</td>
+                <td>{{ veiculo.disponibilidade|yesno:"Disponível,Indisponível" }}</td>
+                <td>
+                    <a href="{% url 'exibir' veiculo.id %}" class="btn btn-info">Detalhes</a>
+                    <a href="{% url 'editar' veiculo.id %}" class="btn btn-warning">Editar</a>
+                    <a href="{% url 'excluir' veiculo.id %}" class="btn btn-danger">Excluir</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; primeira</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}
